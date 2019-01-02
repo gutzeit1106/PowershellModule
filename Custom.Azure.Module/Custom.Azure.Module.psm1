@@ -1,3 +1,5 @@
+#Import-Module AzureRM
+
 function Test-HogeHoge
 {
     Write-Host "HogeHoge"
@@ -5,7 +7,23 @@ function Test-HogeHoge
 
 function Save-AzureCustomSubscriptionCost
 {
-    Write-Host "Save-AzureCustomSubscriptionCost"
-}
+    param(
+        [Parameter(ValueFromPipeline=$true,Mandatory=$true)]
+        [string]
+        $Subsctiption
+    )
 
-#Export-ModuleMember -Function Test-HogeHoge, Save-AzureCustomSubscriptionCost
+    Begin{
+    }
+    Process{
+        Select-AzureRmSubscription -Subscription $Subsctiption
+
+        #VMí‚é~
+        Get-AzureRmVM | Stop-AzureRmVM -Force -AsJob
+        
+        #VMSSëSí‚é~
+        Get-AzureRmVmss | Stop-AzureRmVmss -Force -AsJob
+    }
+    End{
+    }
+}
